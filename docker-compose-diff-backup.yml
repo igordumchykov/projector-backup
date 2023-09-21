@@ -1,0 +1,19 @@
+version: "3.5"
+services:
+  db:
+    image: mysql:8.0.30-debian
+    container_name: "db_diff_backup"
+    restart: unless-stopped
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./backups/differential:/backup
+      - ./my.cnf:/etc/mysql/conf.d/my.cnf
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=my_db_user
+      - MYSQL_DATABASE=my_db
+      - MYSQL_PASSWORD=password
+volumes:
+  db_data: { }
