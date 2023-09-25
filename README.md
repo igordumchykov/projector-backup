@@ -109,11 +109,13 @@ mysqlbinlog /backup/log-bin.000008 > /backup/incr-2.sql
 
 # Reverse Delta Backup
 
-It starts from full backup and log-bin files backup. When data should be restored to previous state,
-we need to make a 'reverse' backup of the file(s). To do that, we need to write additional script that can read backup
-from bin-log file and undo changes in order to go back to previous version, or we can restore db from full backup and
-after that
-restore incremental backups from the last one to the earliest in order to simulate undoing changes.
+It starts from full backup and log-bin files backup. Next time, it will not be a delta because no changes were made after
+initial backup. When new changes are made, new full back up is made and rollback diff between 2 backups are calculated that will be 
+run next time in order to restore to previous state. The first full back up can be removed. Next time if e need to restore to
+previous state, we need to apply rollback backup against full backup. During the time fullback backup increases in size.
+The most difficult part is to prepare a script that can create rollback backup and apply to the latest full backup in order
+to restore previous state.
+
 
 # CDP
 
